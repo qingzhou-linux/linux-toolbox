@@ -1,0 +1,5 @@
+backup/
+mybackup/
+logs/
+*.tar.gz
+*.log
