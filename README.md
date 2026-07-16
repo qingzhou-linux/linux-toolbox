@@ -49,3 +49,5 @@ tool version
 - tar压缩
 - 日志管理
 - Linux权限管理
+## version
+v1.1
