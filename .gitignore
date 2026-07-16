@@ -1,5 +1,17 @@
-backup/
+# 运行产生的备份数据
+backup/*
+!backup/.gitkeep
 mybackup/
-logs/
 *.tar.gz
+
+# 运行产生的日志
+logs/*
+!logs/.gitkeep
 *.log
+
+# Vim 临时文件
+*.swp
+*.swo
+
+# 其他临时文件
+*.tmp
