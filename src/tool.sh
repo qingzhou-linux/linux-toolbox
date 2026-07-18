@@ -248,7 +248,19 @@ fi
 # =====================
 
 case $1 in
+info)
 
+echo "======================"
+echo " Linux Toolbox "
+echo "======================"
+
+echo "Version: 1.5"
+echo "Backup Dir: $BACKUP_DIR"
+echo "Log File: $LOG_FILE"
+
+echo "======================"
+
+;;
 
 
 backup)
