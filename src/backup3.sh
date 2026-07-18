@@ -2,10 +2,10 @@
 
 
 # =====================
-# 获取脚本路径
+# 获取项目根目录
 # =====================
 
-BASE_DIR=$(cd "$(dirname "$0")" && pwd)
+BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
 
 
 
@@ -13,19 +13,12 @@ BASE_DIR=$(cd "$(dirname "$0")" && pwd)
 # 加载配置文件
 # =====================
 
-if [ -f "$BASE_DIR/../config/config.conf" ]; then
-
-    config_file="$BASE_DIR/../config/config.conf"
+config_file="$BASE_DIR/config/config.conf"
 
 
-elif [ -f "$BASE_DIR/config.conf" ]; then
+if [ ! -f "$config_file" ]; then
 
-    config_file="$BASE_DIR/config.conf"
-
-
-else
-
-    echo "配置文件不存在"
+    echo "配置文件不存在：$config_file"
 
     exit 1
 
@@ -40,7 +33,7 @@ source "$config_file"
 # 参数配置
 # =====================
 
-backup_dir="$BACKUP_DIR"
+backup_dir="$BASE_DIR/$BACKUP_DIR"
 
 
 time=$(date +%Y%m%d_%H%M%S)
@@ -65,7 +58,8 @@ fi
 # 压缩
 # =====================
 
-tar_file="backup_${time}.tar.gz"
+
+tar_file="$BASE_DIR/backup_${time}.tar.gz"
 
 
 
@@ -78,6 +72,7 @@ if [ $? -eq 0 ]; then
     echo "===================="
     echo "压缩完成！"
     echo "文件：$tar_file"
+    echo "===================="
 
 else
 

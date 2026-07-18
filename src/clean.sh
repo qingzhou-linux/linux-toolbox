@@ -2,33 +2,39 @@
 
 
 # =====================
-# 获取脚本路径
+# 获取项目根目录
 # =====================
 
-BASE_DIR=$(cd "$(dirname "$0")" && pwd)
+BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
+
 
 
 # =====================
 # 加载配置文件
 # =====================
 
-if [ -f "$BASE_DIR/../config/config.conf" ]; then
+config_file="$BASE_DIR/config/config.conf"
 
-    config_file="$BASE_DIR/../config/config.conf"
 
-elif [ -f "$BASE_DIR/config.conf" ]; then
+if [ ! -f "$config_file" ]; then
 
-    config_file="$BASE_DIR/config.conf"
+    echo "配置文件不存在：$config_file"
 
-else
-
-    echo "配置文件不存在"
     exit 1
 
 fi
 
 
 source "$config_file"
+
+
+
+# =====================
+# 路径配置
+# =====================
+
+backup_dir="$BASE_DIR/$BACKUP_DIR"
+
 
 
 # =====================
@@ -41,11 +47,15 @@ echo "保留时间：${KEEP_DAYS}天"
 echo "========================="
 
 
+
+# =====================
 # 删除旧压缩包
+# =====================
 
 echo "正在删除 ${KEEP_DAYS} 天前的旧压缩包..."
 
-find "$BASE_DIR/.." \
+
+find "$BASE_DIR" \
     -maxdepth 1 \
     -type f \
     -name "backup_*.tar.gz" \
@@ -54,15 +64,20 @@ find "$BASE_DIR/.." \
     -delete
 
 
+
+# =====================
 # 删除备份目录中的旧文件
+# =====================
 
 echo "正在删除备份目录中的旧文件..."
 
-find "$BACKUP_DIR" \
+
+find "$backup_dir" \
     -type f \
     -mtime +"$KEEP_DAYS" \
     -print \
     -delete
+
 
 
 echo "========================="
