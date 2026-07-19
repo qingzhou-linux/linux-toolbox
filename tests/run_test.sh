@@ -13,15 +13,22 @@ echo "Running info test..."
 ./test_info.sh
 
 
-if [ $? -eq 0 ]; then
-    echo "info test OK"
-else
-    echo "info test FAILED"
-fi
+echo ""
+
+echo "Running backup test..."
+
+./test_backup.sh
+
+
+echo ""
+
+echo "Running clean test..."
+
+./test_clean.sh
 
 
 echo ""
 
 echo "======================"
-echo " Test Finished "
+echo " All Tests Finished "
 echo "======================"
