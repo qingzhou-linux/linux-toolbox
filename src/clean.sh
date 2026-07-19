@@ -2,27 +2,42 @@
 
 
 # =====================
-# 获取项目根目录
+# 获取程序目录
 # =====================
 
-BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
+CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 
 
 # =====================
-# 加载配置文件
+# 加载配置
 # =====================
 
-config_file="$BASE_DIR/config/config.conf"
+
+if [ -f "$CURRENT_DIR/../config/config.conf" ]; then
+
+    # 源码运行
+
+    config_file="$CURRENT_DIR/../config/config.conf"
 
 
-if [ ! -f "$config_file" ]; then
 
-    echo "配置文件不存在：$config_file"
+elif [ -f "/usr/local/share/tool/config.conf" ]; then
+
+    # 安装运行
+
+    config_file="/usr/local/share/tool/config.conf"
+
+
+
+else
+
+    echo "配置文件不存在: $config_file"
 
     exit 1
 
 fi
+
 
 
 source "$config_file"
@@ -30,16 +45,9 @@ source "$config_file"
 
 
 # =====================
-# 路径配置
+# 开始清理
 # =====================
 
-backup_dir="$BASE_DIR/$BACKUP_DIR"
-
-
-
-# =====================
-# 清理旧备份
-# =====================
 
 echo "========================="
 echo "开始清理旧备份"
@@ -52,31 +60,30 @@ echo "========================="
 # 删除旧压缩包
 # =====================
 
-echo "正在删除 ${KEEP_DAYS} 天前的旧压缩包..."
 
+echo "正在删除旧压缩包..."
 
-find "$BASE_DIR" \
-    -maxdepth 1 \
-    -type f \
-    -name "backup_*.tar.gz" \
-    -mtime +"$KEEP_DAYS" \
-    -print \
-    -delete
+find "$HOME/linux-toolbox-data" \
+-type f \
+-name "backup_*.tar.gz" \
+-mtime +"$KEEP_DAYS" \
+-print \
+-delete
 
 
 
 # =====================
-# 删除备份目录中的旧文件
+# 删除旧备份文件
 # =====================
+
 
 echo "正在删除备份目录中的旧文件..."
 
-
-find "$backup_dir" \
-    -type f \
-    -mtime +"$KEEP_DAYS" \
-    -print \
-    -delete
+find "$BACKUP_DIR" \
+-type f \
+-mtime +"$KEEP_DAYS" \
+-print \
+-delete
 
 
 
