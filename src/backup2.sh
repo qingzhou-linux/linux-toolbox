@@ -1,7 +1,10 @@
 #!/bin/bash
 
 
-source /usr/local/share/tool/config.conf
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
+
+tool_load_config || exit 1
 
 
 mkdir -p "$BACKUP_DIR"

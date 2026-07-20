@@ -1,46 +1,11 @@
 #!/bin/bash
 
 
-# =====================
-# 获取程序目录
-# =====================
-
-CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
 
 
-# =====================
-# 加载配置文件
-# =====================
-
-
-if [ -f "$CURRENT_DIR/../config/config.conf" ]; then
-
-    # 源码环境
-
-    config_file="$CURRENT_DIR/../config/config.conf"
-
-
-
-elif [ -f "/usr/local/share/tool/config.conf" ]; then
-
-    # 安装环境
-
-    config_file="/usr/local/share/tool/config.conf"
-
-
-
-else
-
-    echo "配置文件不存在: $CURRENT_DIR/../config/config.conf"
-
-    exit 1
-
-fi
-
-
-
-source "$config_file"
+tool_load_config || exit 1
 
 
 

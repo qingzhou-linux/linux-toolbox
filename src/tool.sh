@@ -4,36 +4,10 @@
 version="1.8"
 
 
-APP_DIR="/usr/local/share/tool"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
 
-config_file="$APP_DIR/config.conf"
-
-
-if [ ! -f "$config_file" ]; then
-
-    echo "配置文件不存在:$config_file"
-
-    exit 1
-
-fi
-
-
-source "$config_file"
-
-
-
-log_file="$LOG_FILE"
-
-
-log()
-{
-
-mkdir -p "$(dirname "$log_file")"
-
-echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$log_file"
-
-}
+tool_load_config || exit 1
 
 
 
@@ -46,9 +20,9 @@ echo "========================="
 
 echo "版本：$version"
 
-echo "程序目录：$APP_DIR"
+echo "程序目录：$TOOL_ROOT"
 
-echo "配置文件：$config_file"
+echo "配置文件：$TOOL_CONFIG_FILE"
 
 echo "备份目录：$BACKUP_DIR"
 
@@ -119,7 +93,7 @@ shift
 
 log "执行备份:$@"
 
-/usr/local/share/tool/backup2.sh "$@"
+"$TOOL_BIN_DIR/backup2.sh" "$@"
 
 
 ;;
@@ -128,7 +102,7 @@ log "执行备份:$@"
 
 compress)
 
-/usr/local/share/tool/backup3.sh
+"$TOOL_BIN_DIR/backup3.sh"
 
 
 ;;
@@ -137,7 +111,7 @@ compress)
 
 clean)
 
-/usr/local/share/tool/clean.sh
+"$TOOL_BIN_DIR/clean.sh"
 
 
 ;;

@@ -54,6 +54,8 @@ check_file "$BASE_DIR/src/backup3.sh"
 
 check_file "$BASE_DIR/src/clean.sh"
 
+check_file "$BASE_DIR/src/lib/common.sh"
+
 check_file "$BASE_DIR/config/config.conf"
 
 
@@ -69,6 +71,8 @@ echo "文件检查完成"
 echo "创建安装目录..."
 
 sudo mkdir -p "$APP_DIR"
+
+sudo mkdir -p "$APP_DIR/lib"
 
 
 
@@ -87,6 +91,8 @@ sudo cp "$BASE_DIR/src/backup2.sh" "$APP_DIR/"
 sudo cp "$BASE_DIR/src/backup3.sh" "$APP_DIR/"
 
 sudo cp "$BASE_DIR/src/clean.sh" "$APP_DIR/"
+
+sudo cp "$BASE_DIR/src/lib/common.sh" "$APP_DIR/lib/"
 
 
 
