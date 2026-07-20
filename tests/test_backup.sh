@@ -6,25 +6,49 @@ echo " Testing backup "
 echo "======================"
 
 
+# 加载测试环境
+
+source "$(dirname "$0")/test_helper.sh"
+
+
+setup_test_env
+
+
+
 # 创建测试文件
 
-echo "hello linux toolbox" > test_file.txt
+test_file="$TEST_HOME/test_file.txt"
+
+echo "hello linux toolbox" > "$test_file"
+
 
 
 # 执行备份
 
-../src/backup2.sh test_file.txt
+TOOL_CONFIG_FILE="$TOOL_CONFIG_FILE" \
+./src/tool.sh backup "$test_file"
 
 
-# 检查备份目录
 
-if [ -d "../backup" ]; then
+assert_success $?
 
-    echo "backup directory exists"
+
+
+# 查找备份文件
+
+backup_file=$(find "$TEST_HOME/linux-toolbox-data/backup" \
+-name "test_file_*.txt" \
+-type f)
+
+
+
+if [ -n "$backup_file" ]; then
+
+    echo "backup file exists"
 
 else
 
-    echo "backup directory missing"
+    echo "backup test failed"
 
     exit 1
 
@@ -32,23 +56,4 @@ fi
 
 
 
-# 检查备份文件数量
-
-count=$(ls ../backup | wc -l)
-
-
-if [ $count -gt 0 ]; then
-
-    echo "backup test passed"
-
-else
-
-    echo "backup test failed"
-
-fi
-
-
-
-# 删除测试文件
-
-rm test_file.txt
+echo "backup test passed"

@@ -6,49 +6,78 @@ echo " Testing clean "
 echo "======================"
 
 
-# 创建测试文件
-
-test_file="../backup/old_backup.txt"
+source "$(dirname "$0")/test_helper.sh"
 
 
-echo "old backup test" > "$test_file"
+setup_test_env
 
 
 
-# 修改时间为10天以前
+backup_dir="$TEST_HOME/linux-toolbox-data/backup"
 
-touch -d "10 days ago" "$test_file"
+
+
+# 创建旧文件
+
+old_file="$backup_dir/old_backup.txt"
+
+echo "old backup" > "$old_file"
+
+
+touch -d "10 days ago" "$old_file"
+
+
+
+# 创建新文件
+
+new_file="$backup_dir/new_backup.txt"
+
+echo "new backup" > "$new_file"
 
 
 
 # 确认文件存在
 
-if [ ! -f "$test_file" ]; then
+assert_file_exists "$old_file"
 
-    echo "create test file failed"
-
-    exit 1
-
-fi
+assert_file_exists "$new_file"
 
 
 
 # 执行清理
 
-../src/clean.sh
+TOOL_CONFIG_FILE="$TOOL_CONFIG_FILE" \
+./src/tool.sh clean
 
 
 
-# 检查文件是否被删除
+assert_success $?
 
-if [ -f "$test_file" ]; then
 
-    echo "clean test failed"
+
+# 检查旧文件删除
+
+if [ -f "$old_file" ]; then
+
+    echo "old file still exists"
 
     exit 1
 
-else
+fi
 
-    echo "clean test passed"
+
+
+# 检查新文件保留
+
+if [ ! -f "$new_file" ]; then
+
+    echo "new file removed"
+
+    exit 1
 
 fi
+
+
+
+echo "clean test passed"
+
