@@ -1,125 +1,129 @@
 # Linux Toolbox
 
-一个基于 Bash Shell 开发的 Linux 自动化管理工具。
+Linux Toolbox 是一个使用 Bash 开发的 Linux 文件备份管理工具，提供文件备份、备份目录压缩、历史清理、状态查看和日志记录等功能。
 
-Linux Toolbox 提供文件备份、压缩、历史清理、状态查看等功能，
-帮助用户快速管理 Linux 环境中的文件备份任务。
+项目既可以直接从源码目录运行，也可以安装为系统命令 `tool`。当前 `develop` 分支处于 v1.9.0-beta 完善阶段，命令行程序报告的版本号仍为 `1.8`。
 
+## 功能列表
 
-# 功能特性
+- 备份单个或多个普通文件
+- 为备份文件添加时间戳
+- 将备份目录压缩为 `tar.gz` 文件
+- 按配置的保留天数清理历史备份和压缩包
+- 查看备份数量、最新备份、备份目录大小和日志状态
+- 查看程序目录、配置文件、备份目录和日志文件位置
+- 记录备份命令日志
+- 支持源码环境和安装环境的统一路径解析
+- 支持通过 `TOOL_CONFIG_FILE` 指定配置文件
+- 支持安装为 `/usr/local/bin/tool`
+- 提供自动化测试、Bash 语法检查、ShellCheck 和 GitHub Actions CI
 
-- 文件自动备份
-- 多文件备份支持
-- 备份文件压缩
-- 历史备份清理
-- 备份状态查看
-- 日志记录
-- 配置文件管理
-- 一键安装为 Linux 命令
+## 项目结构
 
-
-# 项目结构
-
-
-```
-linux-toolbox
-
-├── backup
-│
-├── config
-│   └── config.conf
-│
-├── logs
-│
-├── src
-│   ├── tool.sh
-│   ├── backup2.sh
-│   ├── backup3.sh
-│   └── clean.sh
-│
-├── tests
-│   ├── run_test.sh
+```text
+linux-toolbox/
+├── .github/
+│   └── workflows/
+│       └── test.yml          # GitHub Actions CI
+├── backup/                   # 仓库内占位目录
+├── config/
+│   └── config.conf           # 默认配置
+├── logs/                     # 仓库内占位目录
+├── src/
+│   ├── lib/
+│   │   └── common.sh         # 路径、配置和日志公共模块
+│   ├── tool.sh               # CLI 入口与命令分发
+│   ├── backup2.sh            # 文件备份
+│   ├── backup3.sh            # 备份压缩
+│   └── clean.sh              # 历史备份清理
+├── tests/
+│   ├── check_code.sh         # Bash 语法和 ShellCheck 检查
+│   ├── run_test.sh           # 测试入口
+│   ├── test_helper.sh        # 隔离测试环境与断言函数
 │   ├── test_info.sh
 │   ├── test_backup.sh
-│   └── test_clean.sh
-│
-├── install.sh
-│
-├── uninstall.sh
-│
+│   ├── test_clean.sh
+│   ├── test_compress.sh
+│   └── test_cli.sh
+├── install.sh                # 安装脚本
+├── uninstall.sh              # 卸载脚本
 └── README.md
 ```
 
+## 安装方法
 
-# 安装
+Linux Toolbox 面向具备 Bash、GNU Coreutils、`find` 和 `tar` 的 Linux 环境。
 
-
-进入项目目录：
+进入项目目录并执行安装：
 
 ```bash
 cd linux-toolbox
-```
-
-
-执行安装：
-
-```bash
 sudo ./install.sh
 ```
 
+安装脚本会创建：
 
-安装完成后：
-
-```bash
-tool
+```text
+/usr/local/bin/tool
+/usr/local/share/tool/
+├── tool.sh
+├── backup2.sh
+├── backup3.sh
+├── clean.sh
+├── config.conf
+└── lib/
+    └── common.sh
 ```
 
-
-即可直接使用。
-
-
-# 使用方法
-
-
-## 查看帮助
+安装完成后可以直接运行：
 
 ```bash
 tool help
 ```
 
+卸载程序和系统命令：
 
-## 查看版本
+```bash
+sudo ./uninstall.sh
+```
+
+卸载脚本不会删除用户目录下的备份、压缩包和日志数据。
+
+## 使用示例
+
+### 查看帮助
+
+```bash
+tool help
+```
+
+不带参数运行 `tool` 也会显示帮助：
+
+```bash
+tool
+```
+
+### 查看版本
 
 ```bash
 tool version
 ```
 
+当前输出：
 
-示例：
-
-```
+```text
 Linux工具箱版本:1.8
 ```
 
-
-## 查看工具信息
+### 查看工具信息
 
 ```bash
 tool info
 ```
 
+该命令显示软件版本、程序目录、配置文件、备份目录和日志文件位置。
 
-显示：
-
-- 软件版本
-- 程序目录
-- 配置文件位置
-- 备份目录
-- 日志文件位置
-
-
-## 文件备份
-
+### 备份文件
 
 备份单个文件：
 
@@ -127,83 +131,82 @@ tool info
 tool backup test.txt
 ```
 
-
 备份多个文件：
 
 ```bash
 tool backup file1.txt file2.txt
 ```
 
+默认备份目录：
 
-备份文件保存位置：
-
+```text
+$HOME/linux-toolbox-data/backup
 ```
-~/linux-toolbox-data/backup
+
+备份文件使用时间戳命名。例如：
+
+```text
+test_20260721_143327.txt
 ```
 
+当前备份命令只处理普通文件，不递归备份目录。
 
-
-## 压缩备份
-
-
-执行：
+### 压缩备份
 
 ```bash
 tool compress
 ```
 
+压缩包生成在：
 
-生成：
-
+```text
+$HOME/linux-toolbox-data/backup_YYYYMMDD_HHMMSS.tar.gz
 ```
-~/linux-toolbox-data/backup_xxxx.tar.gz
-```
 
+执行压缩前，配置的备份目录必须存在。
 
-
-## 清理旧备份
-
-
-执行：
+### 清理历史备份
 
 ```bash
 tool clean
 ```
 
+该命令使用 `KEEP_DAYS` 清理：
 
-根据配置文件中的保留时间自动删除旧备份。
+- `$HOME/linux-toolbox-data` 下超过保留时间的 `backup_*.tar.gz`
+- `BACKUP_DIR` 下超过保留时间的普通文件
 
-
-## 查看状态
-
-
-执行：
+### 查看状态
 
 ```bash
 tool status
 ```
 
-
-显示：
+状态信息包括：
 
 - 当前备份数量
 - 最新备份文件
-- 备份大小
-- 日志状态
+- 备份目录大小
+- 日志文件是否存在
 
+### 从源码运行
 
+无需安装即可从项目根目录运行：
 
-# 配置文件
-
-
-配置文件：
-
+```bash
+./src/tool.sh help
+./src/tool.sh info
+./src/tool.sh status
 ```
-config/config.conf
-```
 
+## 配置说明
 
-当前配置：
+默认配置文件为：
+
+- 源码环境：`config/config.conf`
+- 安装环境：`/usr/local/share/tool/config.conf`
+
+默认内容：
 
 ```bash
 BACKUP_DIR="$HOME/linux-toolbox-data/backup"
@@ -213,161 +216,75 @@ KEEP_DAYS=7
 LOG_FILE="$HOME/linux-toolbox-data/logs/tool.log"
 ```
 
+| 配置项 | 说明 |
+| --- | --- |
+| `BACKUP_DIR` | 备份文件存储目录 |
+| `KEEP_DAYS` | 普通备份文件和压缩包的保留天数 |
+| `LOG_FILE` | 备份命令日志文件 |
 
-说明：
-
-|配置|作用|
-|-|-|
-|BACKUP_DIR|备份文件存储目录|
-|KEEP_DAYS|备份保留时间|
-|LOG_FILE|日志文件位置|
-
-
-
-# 自动化测试
-
-
-进入测试目录：
+可以通过环境变量临时指定其他配置文件：
 
 ```bash
-cd tests
+TOOL_CONFIG_FILE=/path/to/config.conf ./src/tool.sh info
 ```
 
+配置文件使用 Bash 语法，并由程序通过 `source` 加载，应仅使用可信配置文件。
 
-运行：
+## 测试方法
+
+从项目根目录运行完整测试：
 
 ```bash
-./run_test.sh
+bash tests/run_test.sh
 ```
 
+测试套件使用临时目录隔离用户数据，当前覆盖：
 
-测试内容：
+- `info` 信息输出
+- 单文件备份
+- 历史文件清理
+- 备份目录压缩及压缩内容
+- CLI 的 `help`、`version` 和未知命令
 
-- info功能测试
-- backup功能测试
-- clean功能测试
+运行 Bash 语法检查和 ShellCheck：
 
-
-测试结果：
-
-```
-info test passed
-
-backup test passed
-
-clean test passed
-
-All Tests Finished
+```bash
+bash tests/check_code.sh
 ```
 
+单独执行与 CI 相同的检查：
 
+```bash
+bash -n src/*.sh
+bash -n src/lib/*.sh
+bash -n tests/*.sh
 
-# 技术实现
+shellcheck src/*.sh
+shellcheck src/lib/*.sh
+shellcheck tests/*.sh
+```
 
+运行代码检查前需要安装 `shellcheck`。
 
-## Shell开发
+## CI 说明
+
+项目通过 `.github/workflows/test.yml` 配置 GitHub Actions。每次 push 和 pull request 都会在 `ubuntu-latest` 上执行：
+
+1. 检出仓库代码
+2. 安装 ShellCheck
+3. 对 `src/`、`src/lib/` 和 `tests/` 中的脚本运行 `bash -n`
+4. 对相同脚本运行 ShellCheck
+5. 执行 `bash tests/run_test.sh`
+
+任意步骤返回非零状态时，CI 作业失败。
+
+## 技术栈
 
 - Bash Shell
-- 参数处理
-- 函数封装
-- 条件判断
-- 循环处理
-
-
-## Linux技术
-
-- Linux文件系统
-- Linux权限管理
-- PATH环境变量
-- tar压缩
-- find文件管理
-- 日志系统
-
-
-## 工程化设计
-
-- 配置文件管理
-- 模块化脚本设计
-- 自动安装脚本
-- 自动化测试
-- Git版本管理
-
-
-
-# 版本记录
-
-
-## v1.8
-
-主要更新：
-
-- 重构安装架构
-- 支持系统命令 tool
-- 修复开发环境和安装环境路径问题
-- 分离程序文件和用户数据
-- 优化日志管理
-- 完善状态查看功能
-
-
-## v1.7
-
-主要更新：
-
-- 增加自动化测试框架
-- 增加测试脚本
-
-
-## v1.6
-
-主要更新：
-
-- 增加 CLI 命令结构
-- 增加 info/status/version 命令
-
-
-## v1.5
-
-初始版本：
-
-- 文件备份
-- 文件压缩
-- 历史清理
-- 基础配置管理
-
-
-
-# 卸载
-
-
-执行：
-
-```bash
-sudo ./uninstall.sh
-```
-
-
-卸载：
-
-- 删除系统命令 tool
-- 删除安装目录
-
-
-
-# 项目总结
-
-
-Linux Toolbox 是一个从零开发的 Linux 命令行工具项目。
-
-
-通过该项目实践：
-
-- Bash Shell脚本开发
-- Linux系统管理
-- 软件安装流程
-- 自动化测试
-- Git版本控制
-
-
-最终实现一个：
-
-**可安装、可运行、可维护的 Linux CLI 工具。**
+- Linux 文件系统与权限管理
+- GNU Coreutils：`cp`、`ls`、`du`、`date` 等
+- `find`：历史文件查找和清理
+- `tar`：备份目录压缩
+- ShellCheck：Shell 静态检查
+- Git 与 GitHub
+- GitHub Actions
