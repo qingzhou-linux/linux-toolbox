@@ -6,6 +6,7 @@ echo " Testing CLI "
 echo "======================"
 
 
+# shellcheck disable=SC1091
 source "$(dirname "$0")/test_helper.sh"
 
 
