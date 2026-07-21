@@ -47,7 +47,15 @@ tar_file="$HOME/linux-toolbox-data/backup_${time}.tar.gz"
 
 
 
+if [[ "$backup_dir" = /* ]]; then
+
+tar -czf "$tar_file" -C / "${backup_dir#/}"
+
+else
+
 tar -czf "$tar_file" "$backup_dir"
+
+fi
 
 
 

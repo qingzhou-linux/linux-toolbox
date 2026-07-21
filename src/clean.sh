@@ -29,12 +29,16 @@ echo "========================="
 
 echo "正在删除旧压缩包..."
 
+if [ -d "$HOME/linux-toolbox-data" ]; then
+
 find "$HOME/linux-toolbox-data" \
 -type f \
 -name "backup_*.tar.gz" \
 -mtime +"$KEEP_DAYS" \
 -print \
 -delete
+
+fi
 
 
 
@@ -45,11 +49,15 @@ find "$HOME/linux-toolbox-data" \
 
 echo "正在删除备份目录中的旧文件..."
 
+if [ -d "$BACKUP_DIR" ]; then
+
 find "$BACKUP_DIR" \
 -type f \
 -mtime +"$KEEP_DAYS" \
 -print \
 -delete
+
+fi
 
 
 
