@@ -55,6 +55,8 @@ run_test "clean test" "test_clean.sh"
 
 run_test "compress test" "test_compress.sh"
 
+run_test "CLI test" "test_cli.sh"
+
 echo ""
 
 echo "======================"

@@ -91,7 +91,7 @@ backup)
 
 shift
 
-log "执行备份:$@"
+log "执行备份:$*"
 
 "$TOOL_BIN_DIR/backup2.sh" "$@"
 
