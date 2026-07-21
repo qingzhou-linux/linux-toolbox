@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-version="1.8"
+version="1.9.0-beta"
 
 
 # shellcheck disable=SC1091

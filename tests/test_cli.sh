@@ -58,7 +58,7 @@ echo "$output"
 
 
 
-echo "$output" | grep -q "1.8"
+echo "$output" | grep -q "1.9.0-beta"
 
 
 if [ $? -ne 0 ]; then
