@@ -232,13 +232,21 @@ TOOL_CONFIG_FILE=/path/to/config.conf ./src/tool.sh info
 
 ## 测试方法
 
-从项目根目录运行完整测试：
+代码检查：
+
+```bash
+bash tests/check_code.sh
+```
+
+`check_code.sh` 负责逐文件执行 Bash 语法检查和 ShellCheck 检查。运行前需要安装 `shellcheck`。
+
+功能测试：
 
 ```bash
 bash tests/run_test.sh
 ```
 
-测试套件使用临时目录隔离用户数据，当前覆盖：
+`run_test.sh` 负责功能测试，并使用临时目录隔离用户数据。当前覆盖：
 
 - `info` 信息输出
 - 单文件备份
@@ -246,35 +254,14 @@ bash tests/run_test.sh
 - 备份目录压缩及压缩内容
 - CLI 的 `help`、`version` 和未知命令
 
-运行 Bash 语法检查和 ShellCheck：
-
-```bash
-bash tests/check_code.sh
-```
-
-单独执行与 CI 相同的检查：
-
-```bash
-bash -n src/*.sh
-bash -n src/lib/*.sh
-bash -n tests/*.sh
-
-shellcheck src/*.sh
-shellcheck src/lib/*.sh
-shellcheck tests/*.sh
-```
-
-运行代码检查前需要安装 `shellcheck`。
-
 ## CI 说明
 
 项目通过 `.github/workflows/test.yml` 配置 GitHub Actions。每次 push 和 pull request 都会在 `ubuntu-latest` 上执行：
 
 1. 检出仓库代码
 2. 安装 ShellCheck
-3. 对 `src/`、`src/lib/` 和 `tests/` 中的脚本运行 `bash -n`
-4. 对相同脚本运行 ShellCheck
-5. 执行 `bash tests/run_test.sh`
+3. 执行 `bash tests/check_code.sh`，逐文件运行 Bash 语法检查和 ShellCheck
+4. 执行 `bash tests/run_test.sh`
 
 任意步骤返回非零状态时，CI 作业失败。
 
