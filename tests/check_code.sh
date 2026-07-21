@@ -48,6 +48,7 @@ echo "Running ShellCheck..."
 
 
 shellcheck \
+--severity=error \
 "$PROJECT_ROOT"/src/*.sh \
 "$PROJECT_ROOT"/src/lib/*.sh \
 "$PROJECT_ROOT"/tests/*.sh

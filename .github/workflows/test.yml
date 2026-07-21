@@ -10,24 +10,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ShellCheck
         run: |
           sudo apt-get update
           sudo apt-get install -y shellcheck
 
-      - name: Check Bash syntax
-        run: |
-          bash -n src/*.sh
-          bash -n src/lib/*.sh
-          bash -n tests/*.sh
-
-      - name: Run ShellCheck
-        run: |
-          shellcheck src/*.sh
-          shellcheck src/lib/*.sh
-          shellcheck tests/*.sh
+      - name: Check shell code
+        run: bash tests/check_code.sh
 
       - name: Run tests
         run: bash tests/run_test.sh
